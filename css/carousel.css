@@ -1,0 +1,70 @@
+*{
+  padding: 0;
+  margin: 0;
+}
+.main{
+  width: 980px;
+  height: 455px;
+  margin-left: 219px;
+  margin-top: 10px;
+}
+a{
+  text-decoration: none;
+  color: #fff;
+}
+li{
+  list-style: none;
+}
+/* 左右切换按钮 */
+.focus{
+  position: relative;
+  width: 720px;
+  height: 455px;
+  background-color: purple;
+  overflow: hidden;
+}
+.arrow-l,.arrow-r{
+  position: absolute;
+  top: 50%;
+  width: 24px;
+  height: 40px;
+  margin-top: -20px;
+  background: rgba(0,0,0,.3);
+  line-height: 40px;
+  text-align: center;
+  z-index: 999;
+}
+.arrow-r{
+  right: 0;
+}
+
+.focus ul{
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 400%;
+}
+.focus ul li{
+  float: left;
+}
+.focus ul img{
+  width: 720px;
+  height: 455px;
+}
+ol.circle{
+  position: absolute;
+  left: 300px;
+  bottom: 10px;
+}
+.circle li{
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid #000;
+  margin: 10px 5px;
+  float: left;
+  cursor: pointer;
+}
+.circle li.current{
+  background-color: #000;
+}
