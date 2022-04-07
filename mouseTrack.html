@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 鼠标轨迹特效: 鼠标移入小方块，小方块高亮显示，鼠标移出小方块，小方块恢复默认样式 -->
+<!-- TODO:颜色缓慢变化......... -->
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    :root {
+      /* 在页面根目录中定义变量，用于keyframes */
+      --my-color: '';
+    }
+
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    .container {
+      width: 400px;
+      height: 400px;
+      background-color: #fff;
+    }
+
+    .row {
+      width: 350px;
+      height: 12px;
+    }
+
+    .box {
+      width: 10px;
+      height: 10px;
+      background-color: #ddd;
+      display: inline-block;
+      margin: 0px 2px;
+      animation: colorFade 2s;
+    }
+
+    @keyframes colorFade {
+      0% {
+        opacity: 1;
+      }
+
+      100% {
+        background-color: #ddd;
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!--小方块阵列-->
+  <div class="container" id="container"></div>
+
+  <script>
+    //生成一个小方块阵列，并且给每个小方块绑定鼠标移入和移出事件
+    function generateSquare () {
+      for (let i = 0; i < 25; i++) {
+        let row = document.createElement('div');
+        row.className = 'row';
+        container.appendChild(row);
+        for (let j = 0; j < 25; j++) {
+          let box = document.createElement('div');
+          box.className = 'box';
+          row.appendChild(box);
+          //鼠标移入
+          box.onmouseenter = function (event) {
+            setColor(box);
+          }
+          //鼠标移出
+          box.onmouseleave = function (event) {
+            deleteColor(box)
+          }
+        }
+      }
+    }
+    //这个函数实现设置小方块颜色，并且绑定到鼠标移入事件
+    function setColor (element) {
+      var r = Math.floor(Math.random() * 256); //随机生成256以内r值
+      var g = Math.floor(Math.random() * 256); //随机生成256以内g值
+      var b = Math.floor(Math.random() * 256); //随机生成256以内b值
+      // console.log(r, g, b);
+      //设置root中定义的颜色变量
+      // document.documentElement.style.setProperty('--my-color', )
+      // element.classList.add('choose');
+      // console.log(element);
+      element.style.backgroundColor = `rgb(${r},${g},${b})`;
+    }
+    //这个函数实现去除小方块颜色，并且绑定到鼠标移出事件
+    function deleteColor (element) {
+      // element.style.animation = 'colorFade 5s';
+      // element.classList.remove('choose')
+      element.style.backgroundColor = '#ddd';
+    }
+
+    //TODO:颜色缓慢变化
+    // let sleep = (time) => new Promise((resolve) => {
+    //   setTimeout(resolve, time)
+    // })
+
+    let container = document.querySelector('#container');
+    generateSquare();
+  </script>
+</body>
+
+</html>
