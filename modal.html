@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #prompt-form {
+      display: inline-block;
+      padding: 5px 5px 5px 70px;
+      width: 200px;
+      border: 1px solid black;
+      background: white url(https://en.js.cx/clipart/prompt.png) no-repeat left 5px;
+      vertical-align: middle;
+    }
+
+    #prompt-form-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 9999;
+      display: none;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      /*让表单位于窗口中心*/
+    }
+
+    #prompt-form-container:before {
+      display: inline-block;
+      height: 100%;
+      content: '';
+      vertical-align: middle;
+    }
+
+    #cover-div {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 9000;
+      width: 100%;
+      height: 100%;
+      background-color: gray;
+      opacity: 0.3;
+    }
+
+    #prompt-form input[name="text"] {
+      display: block;
+      margin: 5px;
+      width: 180px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- <h2>Click the button below</h2> -->
+  <input type="button" value="Click to show the form" id="show-button">
+
+
+  <div id="prompt-form-container">
+    <form id="prompt-form">
+      <div id="prompt-message"></div>
+      <input name="text" type="text">
+      <input type="submit" value="Ok">
+      <input type="button" name="cancel" value="Cancel">
+    </form>
+  </div>
+
+  <script>
+
+    function showCover () {
+      let coverDiv = document.createElement('div');
+      coverDiv.id = 'cover-div';
+      document.body.append(coverDiv);
+      document.body.style.overflowY = 'hidden';// 阻止页面滚动
+    }
+
+    function hideCover () {
+      document.getElementById('cover-div').remove();
+      document.body.style.overflowY = '';
+    }
+
+    function showPrompt (text, callback) {
+      showCover(); //显示遮罩层
+      let container = document.getElementById('prompt-form-container');
+      let form = document.getElementById('prompt-form');
+      //给prompt-message赋值，清空input内容
+      document.getElementById('prompt-message').innerHTML = text;
+      form.text = '';
+
+      container.style.display = 'block' //显示模态框
+      form.elements.text.focus();  //模态框显示后，焦点在输入框中
+
+      //点击cancel按钮
+      form.cancel.onclick = function () {
+        complete(null);
+      }
+
+      //表单提交,按下enter键/点击ok按钮
+      form.onsubmit = function () {
+        let value = form.text.value;
+        if (value == '') return false;
+        complete(value);
+      }
+
+      //按下escape键
+      document.onkeydown = function (e) {
+        if (e.key === 'Escape') {
+          complete(null);
+        }
+      }
+
+      //Tab/Shift+Tab能在表单字段间切换焦点
+      let firstEle = form.elements[0]
+      let lastEle = form.elements[form.elements.length - 1]
+      lastEle.onkeydown = function (e) {//焦点在最后一个元素上时，按Tab让焦点到第一个元素上
+        if (e.key === 'Tab' && !e.shiftKey) {//Tab
+          firstEle.focus();
+          return false;
+        }
+      }
+      firstEle.onkeydown = function (e) { //焦点在第一个元素上时，按Shift+Tab让焦点到最后一个元素上
+        if (e.key === 'Tab' && e.shiftKey) {//Shift+Tab
+          lastEle.focus();
+          return false;
+        }
+      }
+      function complete (value) {
+        hideCover();
+        container.style.display = 'none';
+        callback(value);
+        document.onkeydown = null; //键盘事件
+      }
+    }
+
+    document.getElementById('show-button').onclick = function () {
+      showPrompt("Enter something<br>...smart :)", function (value) {
+        alert("You entered: " + value);
+      });
+    };
+  </script>
+
+
+</body>
+
+</html>

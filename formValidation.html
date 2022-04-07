@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/formvalidation.css">
+</head>
+
+<body>
+  <form name="validForm" id="form">
+    <div class="item-wrapper">
+      <label for="nameInput">名称</label>
+      <input type="text" class="nameInput" name="nameInput" required minlength="4" maxlength="16">
+      <p class="tip"></p>
+    </div>
+    <div class="item-wrapper">
+      <label for="password">密码</label>
+      <input type="password" class="password" name="password">
+      <p class="tip"></p>
+    </div>
+    <div class="item-wrapper">
+      <label for="repassword">密码确认</label>
+      <input type="password" class="repassword" name="repassword">
+      <p class="tip"></p>
+    </div>
+    <div class="item-wrapper">
+      <label for="email">邮箱</label>
+      <input type="email" class="email" name="email">
+      <p class="tip"></p>
+    </div>
+
+    <input type="button" value="提交" class="submit">
+  </form>
+
+  <script>
+    var form = document.forms.validForm;
+    var nameInput = form.nameInput;
+    var password = form.password;
+    var repassword = form.repassword;
+    var email = form.email;
+    var submitBtn = document.querySelector('.submit')
+
+    //名称
+    function nameValid (ele) {
+      if (!ele.value) {
+        showTip(ele, '名称长度不能为空', 'warning')
+        return false
+      } else if (ele.value.length >= 4 && ele.value.length <= 16) {
+        showTip(ele, '名称可用', 'success')
+        return true
+      }
+    }
+    nameInput.onfocus = function (event) {
+      showTip(this, '必填，长度为4-16字符', 'info')
+    }
+    nameInput.onblur = function (event) {
+      nameValid(nameInput)
+    }
+
+    //密码
+    function passwordValid (ele) {
+      if (!/^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{3,}$/.test(ele.value)) {
+        showTip(ele, '密码格式错误', 'warning')
+        return false
+      } else {
+        showTip(ele, '密码可用', 'success')
+        return true
+      }
+    }
+    password.onfocus = function (event) {
+      showTip(this, '字母与数字的组合', 'info')
+    }
+    password.onblur = function (event) {
+      passwordValid(password)
+    }
+
+    //密码确认
+    function repasswordValid (eleA, eleB) {
+      if (!eleB.value) return false;
+      if (eleA.value !== eleB.value) {
+        showTip(eleB, '密码输入不一致', 'warning')
+        return false
+      } else {
+        showTip(eleB, '密码输入一致', 'success')
+        return true
+      }
+    }
+    repassword.onfocus = function (event) {
+      showTip(this, '再次输入相同密码', 'info')
+    }
+    repassword.onblur = function (event) {
+      repasswordValid(password, repassword)
+    }
+
+    //邮箱
+    function emailValid (ele) {
+      if (!/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(ele.value)) {
+        showTip(ele, '邮箱格式错误', 'warning')
+        return false
+      } else {
+        showTip(ele, '邮箱可用', 'success')
+        return true
+      }
+    }
+    email.onfocus = function (event) {
+      showTip(this, '输入邮箱', 'info')
+    }
+    email.onblur = function (event) {
+      emailValid(email)
+    }
+
+    //点击提交，全局校验
+    submitBtn.addEventListener('click', function (event) {
+      if (nameValid(nameInput) && passwordValid(password) && repasswordValid(password, repassword) && emailValid(email)) {
+        alert('提交成功')
+      } else {
+        prompt('输入有误')
+      }
+    })
+
+    function showTip (ele, text, type) {
+      let tip = ele.parentNode.querySelector('p')
+      tip.innerHTML = text
+      tip.className = type
+      ele.className = type + '-input'
+    }
+  </script>
+</body>
+
+</html>

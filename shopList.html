@@ -31,13 +31,16 @@
       let value = input.value;
 
       let li = document.createElement('li')
-      let p = document.createElement('p')
+      // let p = document.createElement('p')
       let deleteBtn = document.createElement('button')
-      p.innerHTML = value;
+      // p.innerHTML = value;
       deleteBtn.innerHTML = '删除';
-      li.appendChild(p);
-      li.appendChild(deleteBtn);
-      ul.appendChild(li);
+      // li.appendChild(p);
+      // li.appendChild(deleteBtn);
+      // ul.appendChild(li);
+      li.insertAdjacentHTML('afterbegin', '<p>' + value + '</p>');
+      li.insertAdjacentElement('beforeend', deleteBtn);
+      ul.insertAdjacentElement('beforeend', li)
 
       input.value = ''
     }
