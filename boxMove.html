@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    .main {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      border: 1px solid #000;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    .box {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 80px;
+      height: 80px;
+      background-color: #000;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 实现利用键盘来控制小方块的移动
+            1.按上键，小方块向上移动，按下键，小方块向下移动，左右键也是一样
+            2.同时按下 ctrl 键和方向键时，可以加快小方块的移动速度 -->
+  <div class="main">
+    <div class="box"></div>
+  </div>
+
+  <script>
+    var main = document.querySelector('.main')
+    var box = document.querySelector('.box')
+    var speed = 20;
+    // console.log(main.offsetLeft, main.offsetTop);
+
+    document.addEventListener('keydown', function (event) {
+      if (event.ctrlKey) {
+        speed = 50;
+      }
+      switch (event.keyCode) {
+        case 40: //下
+          if (main.offsetHeight - box.offsetTop - box.offsetHeight - speed > 0) {
+            box.style.top = box.offsetTop + speed + 'px';
+          } else {
+            box.style.top = main.offsetHeight - box.offsetHeight + 'px';
+          }
+          break;
+        case 38://上 
+          if (box.offsetTop - speed >= 0) {
+            box.style.top = box.offsetTop - speed + 'px';
+          }
+          break;
+        case 37: //左
+          if (box.offsetLeft - speed >= 0) {
+            box.style.left = box.offsetLeft - speed + 'px';
+          }
+          break;
+        case 39://右
+          if (main.offsetWidth - box.offsetLeft - box.offsetWidth - speed > 0) {
+            box.style.left = box.offsetLeft + speed + 'px';
+          } else {
+            box.style.left = main.offsetWidth - box.offsetWidth + 'px';
+          }
+          break;
+      }
+    })
+  </script>
+</body>
+
+</html>
