@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 图片懒加载：图片未进入可视区，不加载 -->
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    img {
+      display: block;
+      width: 100%;
+      height: 600px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <img data-src="./images/1.jpeg" alt="">
+  <img data-src="./images/2.jpeg" alt="">
+  <img data-src="./images/3.jpeg" alt="">
+  <!-- <img data-src="./images/4.jpeg" alt="">
+  <img data-src="./images/5.jpeg" alt="">
+  <img data-src="./images/6.jpeg" alt=""> -->
+
+
+  <script>
+    var imgs = document.querySelectorAll('img')
+
+    // 方案一：offsetTop，scrollTop，clientHeight
+    // function getTop (img) {
+    //   var top = img.offsetTop;
+    //   while (img = img.offsetParent) { //offsetTop是相对于父元素的，所以需要offsetParent
+    //     top += img.offsetTop;
+    //   }
+    //   return top;
+    // }
+    // function lazyload (imgs) {
+    //   var clientHeight = document.documentElement.clientHeight; //浏览器可视区高度
+    //   var scrollTop = document.documentElement.scrollTop; //滚动距离
+    //   for (var i = 0; i < imgs.length; i++) {
+    //     if (getTop(imgs[i]) - clientHeight < scrollTop) {
+    //       imgs[i].src = imgs[i].getAttribute('data-src')  //或imgs[0].dataset.src
+    //     }
+    //   }
+    // }
+
+
+    //方案二：getBoundingClientRect()
+    function lazyload (imgs) {
+      for (var i = 0; i < imgs.length; i++) {
+        if (imgs[i].getBoundingClientRect().top <= window.innerHeight) {
+          imgs[i].src = imgs[i].dataset.src;
+        }
+      }
+    }
+
+    window.onload = window.onscroll = function () {
+      lazyload(imgs)
+    }
+
+  </script>
+</body>
+
+</html>

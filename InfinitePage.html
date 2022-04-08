@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 创建无限的页面：
+      当访问者滚动到页面末端时，它会自动将当期日期时间附加到文本中
+-->
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+
+  </style>
+</head>
+
+<body>
+  <h2>请滚动</h2>
+
+
+  <script>
+    function polulate () {
+      while (true) {
+        //获取整个文档相对于窗口的末端坐标
+        var windowRelativeBottom = document.documentElement.getBoundingClientRect().bottom;
+        //若文档末端距窗口底部>100，则终止循环
+        if (windowRelativeBottom - document.documentElement.clientHeight > 100) break;
+        document.body.insertAdjacentHTML('beforeend', `<p>${new Date()}</p>`)
+      }
+    }
+    window.addEventListener('scroll', polulate) //监听scroll,无限生成元素
+    polulate(); //init
+  </script>
+</body>
+
+</html>

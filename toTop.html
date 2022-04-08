@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 基于InfinitePage.html 添加一个快速回到顶部的按钮
+
+-->
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #arrowTop {
+      position: fixed;
+      bottom: 60px;
+      right: 30px;
+      width: 14px;
+      height: 14px;
+      color: red;
+      cursor: pointer;
+    }
+
+    #arrowTop::before {
+      content: '▲';
+    }
+  </style>
+</head>
+
+<body>
+  <div id="arrowTop" hidden></div>
+  <h2>请滚动</h2>
+
+  <script>
+
+    function polulate() {
+      while (true) {
+        //获取整个文档相对于窗口的末端坐标
+        var windowRelativeBottom = document.documentElement.getBoundingClientRect().bottom;
+        //若文档末端距窗口底部>100，则终止循环
+        if (windowRelativeBottom - document.documentElement.clientHeight > 100) break;
+        document.body.insertAdjacentHTML('beforeend', `<p>${new Date()}</p>`)
+      }
+      //若滚动距离超过窗口高度，在右下角出现一个箭头
+      arrowTop.hidden = (pageYOffset < document.documentElement.clientHeight)
+    }
+
+    var arrowTop = document.querySelector('#arrowTop');
+
+    window.addEventListener('scroll', polulate) //监听scroll,无限生成元素
+    polulate(); //init
+
+    arrowTop.addEventListener('click', function () {
+      //页面滚动到顶部
+      window.scrollTo(pageXOffset, 0)
+    })
+  </script>
+</body>
+
+</html>
