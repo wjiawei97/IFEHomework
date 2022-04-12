@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/calendar.css">
+</head>
+
+<body>
+  <!-- main div是编码一任务代码 -->
+  <!-- <div id="main"></div> -->
+
+  <!-- 以下为日历代码 -->
+  <!--节日名称-->
+  <label for="title">Title</label>
+  <input type="text" id="title" placeholder="What are you counting down to?" />
+  <label for="date-picker">Select a Date</label>
+
+  <div class="calendar-wrapper">
+    <!--上一个月按钮--->
+    <button class="prev" onclick="Month('prev')">
+      < </button>
+        <select id="year-select">
+          <!-- <option value="" selected disabled>选择年份</option> -->
+        </select>
+        <select id="month-select">
+          <!-- <option value="" selected disabled>选择月份</option> -->
+        </select>
+        <!--下一个月按钮--->
+        <button class="next" onclick="Month('next')">></button>
+        <!--跳转按钮--->
+        <button onclick="now()" class="now">今天</button>
+
+        <div id="calendar">
+          <div class="calendar-header">
+            <span>日</span>
+            <span>一</span>
+            <span>二</span>
+            <span>三</span>
+            <span>四</span>
+            <span>五</span>
+            <span>六</span>
+          </div>
+        </div>
+  </div>
+
+  <!--提交-->
+  <button type="submit" onclick="updateCountDown()">Submit</button>
+  <div class="countdown" id="countdown">
+    <!-- //这里渲染现在倒计时 -->
+    <!-- <div class="festival-name">BIRTHDAY</div> -->
+    <!-- <div class="timer">
+      <div class="timer-item">
+        <div class="number">9</div>
+        <div>DAYS</div>
+      </div>
+      <div class="timer-item">
+        <div class="number">21</div>
+        <div>HOURS</div>
+      </div>
+      <div class="timer-item">
+        <div class="number">21</div>
+        <div>HOURS</div>
+      </div>
+      <div class="timer-item">
+        <div class="number">21</div>
+        <div>HOURS</div>
+      </div>
+    </div> -->
+  </div>
+
+  <script src="./js/calendar.js"></script>
+</body>
+
+</html>
