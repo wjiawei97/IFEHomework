@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="progress">0%</div>
+  <button id="btn" onclick="progressStart()">run</button>
+  <script>
+    var progress = document.querySelector('#progress')
+
+    //方法一：setInterval
+    // function progressStart () {
+    //   //模拟进度条
+    //   var num = 0;
+    //   progress.style.width = num + 'px';
+    // progress.style.backgroundColor = 'pink';
+    //   var timer = setInterval(() => {
+    //     num += 4;
+    //     progress.innerHTML = num + '%';
+    //     progress.style.width = num + 'px';
+    //     if (num >= 100) {
+    //       clearInterval(timer)
+    //     }
+    //   }, 100)
+    // }
+
+    //方法二：setTimeout
+    // var num = 0;
+    // function progressStart () {
+    //   //模拟进度条
+    //   num += 4;
+    //   progress.innerHTML = num + '%';
+    //   progress.style.width = num + 'px';
+    // progress.style.backgroundColor = 'pink';
+    //   var timer = setTimeout(progressStart, 100)
+    //   if (num >= 100) {
+    //     clearInterval(timer)
+    //   }
+    // }
+
+    //方法三：requestAnimationFrame
+    var num = 0;
+
+    function progressStart () {
+      //模拟进度条
+      num += 4;
+      progress.innerHTML = num + '%';
+      progress.style.width = num + 'px';
+      progress.style.backgroundColor = 'pink';
+      var timer = requestAnimationFrame(progressStart)
+      if (num >= 100) {
+        cancelAnimationFrame(timer)
+      }
+
+    }
+  </script>
+</body>
+
+</html>
