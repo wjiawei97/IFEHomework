@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    ul li:hover {
+      background-color: thistle;
+    }
+
+    ul li.active {
+      background-color: peru;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <input type="text" id="email-input">
+    <ul class="email-sug" id="email-sug-wrapper"></ul>
+  </div>
+  <script>
+    // 邮箱后缀List参考
+    var postfixList = ['163.com', 'gmail.com', '126.com', 'qq.com', '263.net'];
+    var input = document.querySelector('#email-input')
+    var ul = document.querySelector('#email-sug-wrapper')
+
+    var selectedIndex = 0;
+
+    window.onload = function () {
+      input.focus()//一进入页面就将焦点放在输入框中
+    }
+
+    input.addEventListener('input', function (event) {
+      //如果按键不是上下及回车重置选中状态
+      // if (event.keyCode != 38 || event.keyCode != 13) {
+      //   resetState()
+      // }
+
+      //获取用户输入，生成提示框中的提示内容，将提示内容添加到email-sug-wrapper中
+      var value = getValue(event.target.value)
+      var html = generateSuggestion(value)
+      //控制email-sug-wrapper的显示/隐藏状态
+      isShowSuggestion(value)
+      appendSuggestion(html)
+
+    })
+
+    ul.addEventListener('click', function (event) {
+      //鼠标如果点击某个提示，则提示内容进入输入框，同时提示框消失
+      var suggestion = event.target.innerHTML
+      chooseSuggestion(suggestion);
+      input.focus();//用户点击鼠标，进行提示选择后，焦点依然在输入框中
+    })
+
+    //监听三个特殊键的键盘事件
+    input.onkeydown = selectSuggestion;
+
+    function getValue (value) {
+      // 拿到input输入框的输入内容trim后返回
+      return value.trim()
+    }
+
+    function generateSuggestion (value) {
+      var html = ''
+      if (value.indexOf('@') !== -1) {
+        var mailInput = value.split('@')[1] //用来前缀匹配的用户输入内容 = @之后的字符串
+        value = value.split('@')[0] //用来拼接的用户输入内容 = @之前的字符串
+      }
+      for (let postfix of postfixList) {
+        if (postfix.startsWith(mailInput)) { //用来前缀匹配的用户输入内容前缀匹配遍历字符串元素
+          html += '<li>' + stringEncode(value) + '@' + postfix + '</li>'
+        }
+      }
+      if (html == '') {
+        for (let postfix of postfixList) {
+          html += '<li>' + stringEncode(value) + '@' + postfix + '</li>'
+        }
+      }
+      return html
+    }
+    function appendSuggestion (html) {
+      ul.innerHTML = html
+      ul.children[selectedIndex].className = 'active'
+    }
+    function isShowSuggestion (value) {
+      if (value == '') {
+        ul.style.display = 'none'
+      } else {
+        ul.style.display = 'block'
+      }
+    }
+    function stringEncode (value) {
+      value = value.replace(/</g, '&lt;')
+      value = value.replace(/>/g, '&gt;')
+      return value
+    }
+    function stringDecode (value) {
+      value = value.replace('&lt;', '<')
+      value = value.replace('&gt;', '>')
+      return value
+    }
+
+    //重置选中状态
+    function resetState () {
+      selectedIndex = 0
+    }
+
+    //将html内容填入input，并隐藏提示框
+    function chooseSuggestion (suggestion) {
+      input.value = stringDecode(suggestion);
+      ul.style.display = 'none'
+    }
+    //获取下一个兄弟节点
+    // function getNextElement (element) {
+    //   var el = element;
+    //   while (el = el.nextSibling) {
+    //     if (el.nodeType === 1) {
+    //       return el;
+    //     }
+    //   }
+    //   return null
+    // }
+    // //获取下一个兄弟节点
+    // function getPrevElement (element) {
+    //   var el = element;
+    //   while (el = el.previousSibling) {
+    //     if (el.nodeType === 1) {
+    //       return el;
+    //     }
+    //   }
+    //   return null
+    // }
+    function selectSuggestion (event) {
+      if (event.keyCode == 38) {
+        ul.children[selectedIndex].className = ''
+        if (selectedIndex == 0) {//当前选中状态是否是第一个
+          selectedIndex = postfixList.length - 1;
+        } else {
+          selectedIndex--;
+        }
+        ul.children[selectedIndex].className = 'active'
+      }
+      if (event.keyCode == 40) {
+        ul.children[selectedIndex].className = ''
+        if (selectedIndex == postfixList.length - 1) {//当前选中状态是否是最后一个
+          selectedIndex = 0;
+        } else {
+          selectedIndex++;
+        }
+        ul.children[selectedIndex].className = 'active'
+      }
+      if (event.keyCode == 13) {
+        chooseSuggestion(ul.children[selectedIndex].innerHTML);
+      }
+      if (event.code == 'Escape') {
+        input.select(); //用户按 ESC 键的时候，对用户输入进行全选
+      }
+
+    }
+  </script>
+
+</body>
+
+</html>
