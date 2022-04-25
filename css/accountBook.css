@@ -1,0 +1,116 @@
+*{
+  padding: 0;
+  margin: 0;
+}
+body{
+  background-color: rgb(247,247,247);
+}
+
+h2{
+  text-align: center;
+}
+.container{
+  width: 350px;
+  margin: 0 auto;
+  margin-top: 30px;
+}
+.inc-exp-container{
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  width: 340px;
+  height: 80px;
+  background-color: #fff;
+  box-shadow: 3px 3px 2px rgb(238,238,238),-1px -1px 2px rgb(238,238,238);
+  margin: 10px 0 30px 0;
+}
+.inc-exp-container div{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  padding:0 60px;
+}
+.inc-exp-container div:first-child{
+  border-right: 2px solid rgb(238,238,238);
+}
+.money{
+  font-weight: bold;
+}
+.money.plus{
+  color: rgb(48,204,113);
+}
+.money.minus{
+  color: red;
+}
+
+.container h3{
+  padding: 20px 0 5px;
+  border-bottom: 1px solid rgb(213, 212, 212);
+}
+.list{
+  margin: 10px 0;
+}
+.list-item{
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  list-style: none;
+  height: 30px;
+  line-height: 30px;
+  background-color: #fff;
+  margin-bottom: 5px;
+  box-shadow: 3px 3px 2px rgb(238,238,238),-1px -1px 2px rgb(238,238,238);
+  padding: 2px 8px;
+  cursor: pointer;
+  /* 禁用点击事件 */
+  /* pointer-events: none; */
+}
+/* 鼠标移入时出现删除图标 */
+.list-item .delete{
+  display: none;
+  position: absolute;
+  top: 8px;
+  left: -20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  background-color: red;
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+  /* 打开子元素的点击事件 */
+  /* pointer-events: auto; */
+}
+/* .list-item:hover::before{
+  display: block;
+} */
+
+.list-item.plus{
+  border-right: 5px solid rgb(48,204,113);
+}
+.list-item.minus{
+  border-right: 5px solid red;
+}
+
+.form-control label{
+  display: block;
+  margin: 15px 0 5px;
+}
+.form-control input{
+  width: 100%;
+  height: 30px;
+  border: 1px solid rgb(213, 212, 212);
+  text-indent: 10px;
+}
+
+.addTransition{
+  border: none;
+  width: 100%;
+  height: 30px;
+  color: #fff;
+  background-color: rgb(157, 136, 255);
+  margin-top: 10px;
+  cursor: pointer;
+}

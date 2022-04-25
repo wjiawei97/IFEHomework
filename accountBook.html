@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/accountBook.css">
+</head>
+
+<body>
+  <h2>记账小簿</h2>
+
+  <div class="container">
+    <h4>你的资金平衡</h4>
+    <h1 id="balance">$0.00</h1>
+
+    <div class="inc-exp-container">
+      <div>
+        <h4>收入</h4>
+        <p id="money-plus" class="money plus">$1.00</p>
+      </div>
+      <div>
+        <h4>支出</h4>
+        <p id="money-minus" class="money minus">$5.00</p>
+      </div>
+    </div>
+
+    <h3>收入&支出记录</h3>
+    <ul id="list" class="list">
+      <!-- <li class="list-item plus">
+        <div class="delete">X</div>
+        <span>上班</span>
+        <span>+123</span>
+      </li> -->
+    </ul>
+
+    <h3>收支条目添加</h3>
+    <form id="form">
+      <div class="form-control">
+        <label for="text">明细</label>
+        <input type="text" id="text" placeholder="输入明细..." />
+      </div>
+      <div class="form-control">
+        <label for="amount">金额
+          <br />
+          (负数 - 支出, 正数 - 收入)</label>
+        <input type="number" id="amount" placeholder="输入金额..." />
+      </div>
+      <button class="addTransition">添加</button>
+    </form>
+  </div>
+  <script>
+    //页面加载进来，需要先读取 localsotrage 是否有键名为transactions的记录
+    var transactions;
+    var totalIncome = 0, totalSpend = 0;
+    var moneyPlus = document.querySelector('#money-plus')
+    var moneyMinus = document.querySelector('#money-minus')
+    var addBtn = document.querySelector('.addTransition')
+    var list = document.querySelector('#list')
+
+    window.onload = function () {
+      if (!localStorage.getItem('transactions')) {
+        transactions = []
+      } else {
+        transactions = JSON.parse(localStorage.getItem('transactions'))
+      }
+      //遍历交易数据，显示收支记录&计算收入和支出总额
+      for (let item of transactions) {
+        var id = item['id'] //给删除图标设置data-index值为id
+        var text = item['text']
+        var amount = item['amount']
+        showRecord(id, text, amount)
+        calIncomeAndSpend(amount)
+      }
+      //显示收入和支出总额
+      showIncomeAndSpend()
+      //显示资金平衡总额 
+      showBalance()
+    }
+
+
+
+    //给按钮绑定添加事件，新增收支记录
+    addBtn.addEventListener('click', addRecord)
+
+    //鼠标悬浮时显示删除图标（伪元素没有dom结构无法直接绑定事件，可以利用事件冒泡）
+    list.addEventListener('mouseover', function (e) {
+      if (e.target.tagName === 'LI') {
+        e.target.querySelector('.delete').style.display = 'block'
+      }
+    })
+    //鼠标离开时图标隐藏
+    list.addEventListener('mouseout', function (e) {
+      if (e.target.tagName === 'DIV') {
+        e.target.style.display = 'none'
+      }
+    })
+    //监听删除图标点击事件
+    list.addEventListener('click', function (e) {
+      // console.log(e.target.dataset.index);
+      var id = e.target.dataset.index;
+      // var li=list.children[id-1]
+      // var amount=li.children[2].innerHTML
+      //删除li节点
+      list.removeChild(list.children[id - 1]);
+      //根据 id 删除 localsotrage 对应的记录
+      var index = transactions.findIndex(item => item.id + '' === id);
+      var amount = transactions[index].amount;
+      transactions.splice(index, 1)
+      localStorage.setItem('transactions', JSON.stringify(transactions))
+
+      //更新收入和支出总额 以及展示板的内容
+      calIncomeAndSpend(amount, false) //false表示删除，即收入和支出需扣除
+      //显示收入和支出总额
+      showIncomeAndSpend()
+      //显示资金平衡总额 
+      showBalance()
+    })
+
+
+    //计算资金平衡额，根据收入和支出算出差值
+    // function calBalance (moneyPlus, moneyMinus) {
+    //   var income = parseFloat(moneyPlus.innerHTML.split('$')[1])
+    //   var spend = parseFloat(moneyMinus.innerHTML.split('$')[1])
+    //   return (income - spend).toFixed(2);
+    // }
+    //展示到balance中
+    function showBalance () {
+      var balance = document.querySelector('#balance')
+      balance.innerHTML = '$' + (totalIncome + totalSpend).toFixed(2)
+    }
+    //添加一条收支记录
+    function addRecord (e) {
+      e.preventDefault();
+      var text = document.querySelector('#text').value;
+      var amount = document.querySelector('#amount').value;
+      var size = transactions.length + 1
+      showRecord(size, text, amount);
+      document.querySelector('#text').value = ''
+      document.querySelector('#amount').value = ''
+
+      //将收支记录添加到本地 localsotrage 中存储
+      var item = { "id": size, "text": text, "amount": amount }
+      transactions.push(item)
+      localStorage.setItem('transactions', JSON.stringify(transactions))
+
+      //更新收入和支出总额 以及展示板的内容
+      calIncomeAndSpend(amount)
+      //显示收入和支出总额
+      showIncomeAndSpend()
+      //显示资金平衡总额 
+      showBalance()
+    }
+
+    //更新展示板的内容
+    function showIncomeAndSpend () {
+      moneyPlus.innerHTML = '$' + (totalIncome.toFixed(2));
+      moneyMinus.innerHTML = '$' + (Math.abs(totalSpend).toFixed(2));
+    }
+    //显示收支记录
+    function showRecord (id, text, amount) {
+      //在 id 为list的列表中添加一个li节点
+      var li = document.createElement('li')
+      li.innerHTML = '<span>' + text + '</span><span>' + handleAmount(amount) + '</span>'
+      li.className = 'list-item'
+      if (amount > 0) {
+        li.classList.add('plus')
+      } else {
+        li.classList.add('minus')
+      }
+      list.appendChild(li)
+
+      //添加删除图标
+      var removeDiv = document.createElement('div')
+      removeDiv.className = 'delete'
+      removeDiv.innerHTML = 'X'
+      removeDiv.setAttribute('data-index', id)
+      li.appendChild(removeDiv)
+    }
+    //根据amount计算收入和支出总额
+    function calIncomeAndSpend (amount, flag = true) {
+      amount = Number(amount).toFixed(2)
+      if (amount > 0) {
+        flag ? totalIncome += Number(amount) : totalIncome -= Number(amount)
+      } else {
+        flag ? totalSpend += Number(amount) : totalSpend -= Number(amount)
+      }
+    }
+    //处理输入金额中的正负
+    function handleAmount (amount) {
+      if (amount > 0) {
+        return '+' + Number(amount).toFixed(2)
+      } else {
+        return Number(amount).toFixed(2)
+      }
+    }
+
+  </script>
+</body>
+
+</html>
